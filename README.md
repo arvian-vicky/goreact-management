@@ -46,7 +46,7 @@ Setelah selesai:
 
 | Layanan     | URL                   |
 |-------------|-----------------------|
-| Frontend    | http://localhost: 5173 |
+| Frontend    | http://localhost:5173 |
 | Backend API | http://localhost:8080 |
 
 Migrasi database dan pembuatan akun admin berjalan otomatis saat backend start. Tidak ada langkah manual tambahan.
