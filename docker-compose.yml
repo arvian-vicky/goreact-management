@@ -1,0 +1,42 @@
+services:
+  backend:
+    build: ./goreact-backend-project-management
+    container_name: goreact-backend-project-management
+    ports:
+      - '8080:8080'
+    environment:
+      DATABASE_URL: postgres://postgres:${DB_PASSWORD}@psql:5432/management?sslmode=disable
+      DB_HOST: psql
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: ${DB_PASSWORD:-postgres}
+      DB_NAME: management
+    depends_on:
+      psql:
+        condition: service_healthy
+
+  frontend:
+    build: ./goreact-frontend-project-management
+    container_name: goreact-frontend-project-management
+    ports:
+      - '5173:5173'
+    depends_on:
+      - backend
+
+  psql:
+    container_name: goreact-psql-project-management
+    image: postgres:16
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
+      POSTGRES_DB: management
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres -d management']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  db_data:
