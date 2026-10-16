@@ -78,7 +78,7 @@ Kredensial default dari `.env.example`:
 
 - Email: `admin@example.com`
 - Username: `admin`
-- Kata sandi: `Admin12345!` **[SESUAIKAN]**
+- Kata sandi:
 
 Ganti nilai ini untuk penggunaan di luar development.
 
