@@ -1,0 +1,35 @@
+# Go build artifacts
+/build/
+bin/
+project-management
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+upload/
+# Go module cache
+vendor/
+
+# Env files
+.env
+.env.*
+!env.example
+
+# IDE/editor configs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+
+# Fiber swagger docs (kalau auto-generated)
+docs/
+
+# OS files
+.DS_Store
+Thumbs.db

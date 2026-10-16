@@ -1,0 +1,1 @@
+DROPDROP TABLE card_assignees;
