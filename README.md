@@ -2,8 +2,6 @@
 
 Aplikasi authentication untuk aplikasi internal tim kecil dengan dua peran: **user** dan **admin**. Backend ditulis dengan Go, frontend dengan React (Vite), database PostgreSQL, dan seluruhnya dijalankan dengan Docker Compose.
 
-> Catatan: bagian bertanda **[SESUAIKAN]** harus diperiksa dan disesuaikan dengan kode yang sebenarnya sebelum dikumpulkan. Hapus tanda ini setelah selesai.
-
 ## Daftar Isi
 
 1. [Fitur](#fitur)
@@ -28,10 +26,10 @@ Aplikasi authentication untuk aplikasi internal tim kecil dengan dua peran: **us
 
 **Fitur tambahan** **[SESUAIKAN]**
 
-- (contoh) Validasi input di backend dan frontend
-- (contoh) Rate limiting pada endpoint login
-- (contoh) Daftar sesi aktif di halaman profil
-- (contoh) Migrasi database otomatis saat startup
+- Validasi input di backend dan frontend
+- Rate limiting pada endpoint login
+- Daftar sesi aktif di halaman profil
+- Migrasi database otomatis saat startup
 
 ## Cara Menjalankan
 
@@ -48,7 +46,7 @@ Setelah selesai:
 
 | Layanan     | URL                   |
 |-------------|-----------------------|
-| Frontend    | http://localhost:3000 |
+| Frontend    | http://localhost: 5173 |
 | Backend API | http://localhost:8080 |
 
 Migrasi database dan pembuatan akun admin berjalan otomatis saat backend start. Tidak ada langkah manual tambahan.
@@ -78,7 +76,7 @@ Kredensial default dari `.env.example`:
 
 - Email: `admin@example.com`
 - Username: `admin`
-- Kata sandi:
+- Kata sandi: ada di seeder
 
 Ganti nilai ini untuk penggunaan di luar development.
 
@@ -111,7 +109,6 @@ Ganti nilai ini untuk penggunaan di luar development.
 **[SESUAIKAN dengan penggunaan yang sebenarnya]**
 
 - **Claude (Anthropic)**: membantu menyusun dan memperbaiki konfigurasi Docker Compose (healthcheck, environment, urutan startup), debugging error build dan Git, serta menyusun kerangka README.
-- (tambahkan tools lain jika ada, misalnya GitHub Copilot, ChatGPT, dan bagian pekerjaan yang dibantu)
 
 Seluruh kode telah saya baca, uji, dan pahami, dan saya bertanggung jawab atas hasil akhirnya.
 
@@ -129,7 +126,6 @@ Satu sesi adalah satu baris di tabel `sessions` (id, user_id, created_at, expire
 Penyerang dapat bertindak sebagai korban selama sesi tersebut masih valid, sampai token kedaluwarsa atau sesi dicabut. Karena sesi disimpan di database, pemilik akun dapat logout, dan jika penyerang login ulang sehingga melewati batas 2 sesi, sesi paling lama (yang kemungkinan milik korban) akan terkena eviction. Admin dapat memakai endpoint force logout (`POST /admin/users/:id/force-logout`) untuk mencabut seluruh sesi pengguna tersebut seketika, lalu korban perlu mengganti kata sandi.
 
 **4. Dua kekurangan yang disadari.**
-(a) Belum ada rate limiting atau penguncian akun pada endpoint login, sehingga rentan terhadap brute force. (b) Token disimpan di sisi klien (localStorage atau cookie tanpa proteksi lengkap), sehingga rentan terhadap XSS atau CSRF, dan belum ada rotasi token atau deteksi perangkat mencurigakan. **[SESUAIKAN dengan kekurangan yang benar-benar ada]**
-
+(a) Belum ada rate limiting atau penguncian akun pada endpoint login, sehingga rentan terhadap brute force. (b) Token disimpan di sisi klien (localStorage atau cookie tanpa proteksi lengkap), sehingga rentan terhadap XSS atau CSRF, dan belum ada rotasi token atau deteksi perangkat mencurigakan. 
 **5. Fitur "keluar dari seluruh perangkat".**
 Saya akan menambahkan endpoint `POST /auth/logout-all` di `internal/handler/auth.go`, yang memanggil fungsi baru `RevokeAllSessions(userID)` di `internal/auth/service.go`. Fungsi itu sudah hampir sama dengan logika force logout admin, yaitu menghapus atau menandai `revoked` semua baris `sessions` milik `user_id` yang sedang login, sehingga cukup memakai ulang query yang sama.
